@@ -15,8 +15,8 @@ const Navigator = () => {
         headerShown: false
       }}
     >
-      <Stack.Screen name="MapScreen" component={MapScreen} />
       <Stack.Screen name="PermissionsScreen" component={PermissionsScreen} />
+      <Stack.Screen name="MapScreen" component={MapScreen} />
     </Stack.Navigator>
   )
 }
