@@ -1,27 +1,26 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import MapView, { Marker } from 'react-native-maps'
-import Geolocation from '@react-native-community/geolocation'
+import { useLocation } from '../hooks/useLocation'
+import LoadingScreen from '../pages/LoadingScreen'
 
 interface MapProps {
   markers?: Marker[]
 }
 
 const Map: FC<MapProps> = ({ markers }) => {
-  useEffect(() => {
-    Geolocation.getCurrentPosition(
-      info => console.log(info),
-      error => console.log(error),
-      { enableHighAccuracy: true }
-    )
-  }, [])
+  const { hasLocation, initialPosition } = useLocation()
+
+  if (!hasLocation) {
+    return <LoadingScreen />
+  }
 
   return (
     <MapView
       style={{ flex: 1 }}
       // provider={PROVIDER_GOOGLE}
       initialRegion={{
-        latitude: 37.78825,
-        longitude: -122.4324,
+        latitude: initialPosition.latitude,
+        longitude: initialPosition.longitude,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
       }}
