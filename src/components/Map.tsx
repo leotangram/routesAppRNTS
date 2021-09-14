@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useRef } from 'react'
 import MapView, { Marker } from 'react-native-maps'
 import { useLocation } from '../hooks/useLocation'
 import LoadingScreen from '../pages/LoadingScreen'
@@ -9,7 +9,16 @@ interface MapProps {
 }
 
 const Map: FC<MapProps> = ({ markers }) => {
-  const { hasLocation, initialPosition } = useLocation()
+  const { getCurrentLocation, hasLocation, initialPosition } = useLocation()
+  const mapViewRef = useRef<MapView>()
+
+  const centerPosition = async () => {
+    const location = await getCurrentLocation()
+
+    mapViewRef.current?.animateCamera({
+      center: location
+    })
+  }
 
   if (!hasLocation) {
     return <LoadingScreen />
@@ -18,6 +27,7 @@ const Map: FC<MapProps> = ({ markers }) => {
   return (
     <>
       <MapView
+        ref={el => (mapViewRef.current = el!)}
         style={{ flex: 1 }}
         // provider={PROVIDER_GOOGLE}
         initialRegion={{
@@ -41,8 +51,8 @@ const Map: FC<MapProps> = ({ markers }) => {
         ))}
       </MapView>
       <Fab
-        iconName="star-outline"
-        onPress={() => {}}
+        iconName="compass-outline"
+        onPress={centerPosition}
         style={{ bottom: 20, position: 'absolute', right: 20 }}
       />
     </>

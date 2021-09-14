@@ -22,7 +22,7 @@ const Fab: FC<FabProps> = ({ iconName, onPress, style = {} }) => {
         onPress={onPress}
         style={styles.blackButton}
       >
-        <Icon color="#ffffff" name={iconName} size={35} />
+        <Icon color="#ffffff" name={iconName} size={35} style={{ left: 1 }} />
       </TouchableOpacity>
     </View>
   )
