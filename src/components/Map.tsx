@@ -1,11 +1,20 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import MapView, { Marker } from 'react-native-maps'
+import Geolocation from '@react-native-community/geolocation'
 
 interface MapProps {
   markers?: Marker[]
 }
 
 const Map: FC<MapProps> = ({ markers }) => {
+  useEffect(() => {
+    Geolocation.getCurrentPosition(
+      info => console.log(info),
+      error => console.log(error),
+      { enableHighAccuracy: true }
+    )
+  }, [])
+
   return (
     <MapView
       style={{ flex: 1 }}
