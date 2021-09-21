@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import MapView, { Marker } from 'react-native-maps'
 import { useLocation } from '../hooks/useLocation'
 import LoadingScreen from '../pages/LoadingScreen'
@@ -9,14 +9,35 @@ interface MapProps {
 }
 
 const Map: FC<MapProps> = ({ markers }) => {
-  const { getCurrentLocation, hasLocation, initialPosition } = useLocation()
+  const {
+    followUserLocation,
+    getCurrentLocation,
+    hasLocation,
+    initialPosition,
+    userLocation
+  } = useLocation()
   const mapViewRef = useRef<MapView>()
 
+  useEffect(() => {
+    followUserLocation()
+
+    return () => {
+      // TODO: remove listener
+    }
+  }, [])
+
+  useEffect(() => {
+    const { latitude, longitude } = userLocation
+    mapViewRef.current?.animateCamera({
+      center: { latitude, longitude }
+    })
+  }, [userLocation])
+
   const centerPosition = async () => {
-    const location = await getCurrentLocation()
+    const { latitude, longitude } = await getCurrentLocation()
 
     mapViewRef.current?.animateCamera({
-      center: location
+      center: { latitude, longitude }
     })
   }
 
